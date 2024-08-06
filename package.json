@@ -3,6 +3,9 @@
   "dependencies": {
     "express": "^4.19.2"
   },
+  "scripts": {
+    "start": "npx nodemon"
+  },
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^22.1.0",
