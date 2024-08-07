@@ -13,41 +13,31 @@ export const signup = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    signupSchema.parse(req.body);
-    const { name, email, password } = req.body;
+  signupSchema.parse(req.body);
+  const { name, email, password } = req.body;
 
-    let user = await prismaClient.user.findFirst({ where: { email } });
+  let user = await prismaClient.user.findFirst({ where: { email } });
 
-    console.log(Boolean(user));
+  console.log(Boolean(user));
 
-    if (user) {
-      return next(
-        new BadException(
-          "User already exists in database!",
-          ErrorCode.USER_ALREADY_EXISTS
-        )
-      );
-    }
-
-    user = await prismaClient.user.create({
-      data: {
-        name,
-        email,
-        password: hashSync(password, 10),
-      },
-    });
-
-    res.json(user);
-  } catch (err) {
+  if (user) {
     return next(
-      new UnprocessableEntityException(
-        err,
-        "Unprocessable Entity",
-        ErrorCode.UNPROCESSABLE_ENTITY
+      new BadException(
+        "User already exists in database!",
+        ErrorCode.USER_ALREADY_EXISTS
       )
     );
   }
+
+  user = await prismaClient.user.create({
+    data: {
+      name,
+      email,
+      password: hashSync(password, 10),
+    },
+  });
+
+  res.json(user);
 };
 
 export const login = async (req: Request, res: Response) => {
