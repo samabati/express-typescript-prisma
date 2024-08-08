@@ -9,6 +9,8 @@ export const adminMiddleware = (
 ) => {
   const user = req.user;
 
+  console.log(user);
+
   if (user.role == "ADMIN") {
     next();
   } else {
