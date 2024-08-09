@@ -8,6 +8,23 @@ const app: Express = express();
 
 export const prismaClient = new PrismaClient({
   log: ["query"],
+}).$extends({
+  result: {
+    address: {
+      formattedAddress: {
+        needs: {
+          lineOne: true,
+          lineTwo: true,
+          city: true,
+          country: true,
+          zipCode: true,
+        },
+        compute: (add) => {
+          return `${add.lineOne}, ${add.lineTwo}, ${add.city}, ${add.country}, ${add.zipCode}`;
+        },
+      },
+    },
+  },
 });
 
 app.use(express.json());
