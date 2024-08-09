@@ -13,3 +13,9 @@ export const AddressSchema = z.object({
   city: z.string(),
   country: z.string(),
 });
+
+export const updatedUserSchema = z.object({
+  name: z.string().optional(),
+  defaultShippingAddressId: z.number().optional(),
+  defaultBillignAddressId: z.number().optional(),
+});

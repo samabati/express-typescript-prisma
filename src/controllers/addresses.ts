@@ -17,7 +17,7 @@ export const addAddress = async (req: Request, res: Response) => {
 
 export const deleteAddress = async (req: Request, res: Response) => {
   try {
-    const deleteAddress = await prismaClient.address.delete({
+    await prismaClient.address.delete({
       where: {
         id: +req.params.id,
       },

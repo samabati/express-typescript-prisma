@@ -11,7 +11,6 @@ export const authMiddleware = async (
   next: NextFunction
 ) => {
   const authHeader = req.headers.authorization!;
-
   if (!authHeader) {
     next(
       new UnauthorizedException(
