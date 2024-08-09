@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AddCartSchema } from "../schema/carts";
+import { AddCartSchema, UpdateCartSchema } from "../schema/carts";
 import { Product } from "@prisma/client";
 import { NotFoundException } from "../exceptions/not-found";
 import { ErrorCode } from "../exceptions/root";
@@ -39,4 +39,31 @@ export const deleteCartItem = async (req: Request, res: Response) => {
   });
 
   res.json({ success: true });
+};
+
+export const updateCartQuantity = async (req: Request, res: Response) => {
+  const validatedData = UpdateCartSchema.parse(req.body);
+  const cart = await prismaClient.cartItem.update({
+    where: {
+      id: +req.params.id,
+    },
+    data: {
+      quantity: validatedData.quantity,
+    },
+  });
+
+  res.json(cart);
+};
+
+export const getCartItems = async (req: Request, res: Response) => {
+  const cartItems = await prismaClient.cartItem.findMany({
+    where: {
+      userId: req.user.id,
+    },
+    include: {
+      product: true,
+    },
+  });
+
+  res.json(cartItems);
 };
