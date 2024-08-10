@@ -119,3 +119,66 @@ export const listOrderById = async (req: Request, res: Response) => {
     );
   }
 };
+
+//Lists all order for entire application in paginated way. option to pass status in body
+export const listAllOrders = async (req: Request, res: Response) => {
+  let where = {};
+  if (req.body.status) {
+    where = {
+      status: req.body.status,
+    };
+  }
+
+  const orders = await prismaClient.order.findMany({
+    where,
+    skip: +req.query.skip! || 0,
+    take: 5,
+  });
+
+  res.json(orders);
+};
+
+//change an order status. accepts order id in param, status in body. creates order event for order change.
+export const changeOrderStatus = async (req: Request, res: Response) => {
+  try {
+    const order = await prismaClient.order.update({
+      where: {
+        id: +req.params.id,
+      },
+      data: {
+        status: req.body.status,
+      },
+    });
+
+    const orderEvent = await prismaClient.orderEvent.create({
+      data: {
+        orderId: order.id,
+        status: req.body.status,
+      },
+    });
+
+    res.json(order);
+  } catch (err) {
+    throw new NotFoundException("Order not found", ErrorCode.ORDER_NOT_FOUND);
+  }
+};
+
+//list orders for a particular user using pagination. id passed in url. can optionally pass in status.
+export const listOrdersById = async (req: Request, res: Response) => {
+  let where: any = {
+    userId: +req.params.id,
+  };
+  if (req.body.status) {
+    where = {
+      ...where,
+      status: req.body.status,
+    };
+  }
+  const orders = await prismaClient.order.findMany({
+    where,
+    skip: +req.query.skip! || 0,
+    take: 5,
+  });
+
+  res.json(orders);
+};
