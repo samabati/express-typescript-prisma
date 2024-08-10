@@ -164,7 +164,7 @@ export const changeOrderStatus = async (req: Request, res: Response) => {
 };
 
 //list orders for a particular user using pagination. id passed in url. can optionally pass in status.
-export const listOrdersById = async (req: Request, res: Response) => {
+export const listUserOrders = async (req: Request, res: Response) => {
   let where: any = {
     userId: +req.params.id,
   };
