@@ -6,11 +6,14 @@ import {
   deleteProduct,
   findProductById,
   listProducts,
+  searchProducts,
   updateProduct,
 } from "../controllers/products";
 import { adminMiddleware } from "../middlewares/adminMiddleware";
 
 const productRoutes = Router();
+
+productRoutes.get("/search", [authMiddleware], errorHandler(searchProducts));
 
 productRoutes.post(
   "/",
